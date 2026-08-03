@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 function Hero() {
   return (
     <section className="max-w-7xl mx-auto px-6 py-20 lg:py-28">
@@ -26,13 +27,17 @@ function Hero() {
 
           <div className="mt-10 flex flex-wrap gap-4">
 
-            <button className="bg-blue-600 text-white px-7 py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
+            <Link
+              to="/register"
+              className="bg-blue-600 text-white px-7 py-3 rounded-xl font-semibold hover:bg-blue-700 transition">
               Start Your Journey
-            </button>
+            </Link>
 
-            <button className="border border-blue-600 text-blue-600 px-7 py-3 rounded-xl font-semibold hover:bg-blue-50 transition">
-              Login
-            </button>
+            <Link
+                to="/login"
+                className="border border-blue-600 text-blue-600 px-7 py-3 rounded-xl font-semibold hover:bg-blue-50 transition">
+                Login
+            </Link>
 
           </div>
 

@@ -1,30 +1,52 @@
-function Navbar() {
-  const navLinks = ["Home", "About", "FAQs"];
+import { Link } from "react-router-dom";
 
+function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
       <div className="max-w-7xl mx-auto h-20 px-6 flex items-center justify-between">
 
         {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer">
-          <span className="text-2xl">🧭</span>
-          <h1 className="text-2xl font-bold text-blue-600">
+        <Link
+          to="/"
+          className="flex items-center gap-2"
+        >
+          <span className="text-3xl">🚀</span>
+
+          <span className="text-3xl font-bold text-blue-600">
             CareerPilot AI
-          </h1>
-        </div>
+          </span>
+        </Link>
 
         {/* Navigation */}
-        <ul className="flex items-center gap-8">
-          {navLinks.map((link) => (
-            <li key={link}>
-              <a
-                href="#"
-                className="text-gray-700 font-medium hover:text-blue-600 transition-colors duration-200"
-              >
-                {link}
-              </a>
-            </li>
-          ))}
+        <ul className="flex items-center gap-8 font-medium">
+
+          <li>
+            <a
+              href="#home"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              Home
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="#about"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              About
+            </a>
+          </li>
+
+          <li>
+            <a
+              href="#faq"
+              className="text-gray-700 hover:text-blue-600 transition"
+            >
+              FAQs
+            </a>
+          </li>
+
         </ul>
 
       </div>

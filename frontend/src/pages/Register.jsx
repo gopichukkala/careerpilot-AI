@@ -10,6 +10,103 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  // Password Strength Function
+  const getPasswordStrength = (password) => {
+    if (password.length === 0) {
+      return { text: "", color: "", width: "0%" };
+    }
+
+    let score = 0;
+
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 1)
+      return {
+        text: "🔴 Weak",
+        color: "bg-red-500",
+        width: "25%",
+      };
+
+    if (score === 2)
+      return {
+        text: "🟡 Medium",
+        color: "bg-yellow-500",
+        width: "50%",
+      };
+
+    if (score === 3)
+      return {
+        text: "🔵 Good",
+        color: "bg-blue-500",
+        width: "75%",
+      };
+
+    return {
+      text: "🟢 Strong",
+      color: "bg-green-500",
+      width: "100%",
+    };
+  };
+
+  const strength = getPasswordStrength(password);
+
+  const handleRegister = () => {
+    if (!fullName.trim()) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!username.trim()) {
+      setError("Please enter a username.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setError("Please enter your email.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!password) {
+      setError("Please create a password.");
+      return;
+    }
+
+    if (!confirmPassword) {
+      setError("Please confirm your password.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setError("Please accept the Terms & Conditions.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+      alert("🎉 Account Created Successfully!");
+    }, 1500);
+  };
+
   return (
     <>
       <PublicNavbar />
@@ -55,21 +152,30 @@ function Register() {
               label="Full Name"
               placeholder="Enter your full name"
               value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              onChange={(e) => {
+                setFullName(e.target.value);
+                setError("");
+              }}
             />
 
             <InputField
               label="Username"
               placeholder="Choose a username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {
+                setUsername(e.target.value);
+                setError("");
+              }}
             />
 
             <InputField
               label="Email Address"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+              }}
             />
 
             <InputField
@@ -77,24 +183,78 @@ function Register() {
               type="password"
               placeholder="Create a password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
             />
+
+            {/* Password Strength */}
+            {password && (
+              <div className="mb-5">
+                <div className="flex justify-between text-sm mb-2">
+                  <span>Password Strength</span>
+                  <span className="font-medium">{strength.text}</span>
+                </div>
+
+                <div className="w-full h-2 bg-gray-200 rounded-full">
+                  <div
+                    className={`${strength.color} h-2 rounded-full transition-all duration-300`}
+                    style={{ width: strength.width }}
+                  ></div>
+                </div>
+              </div>
+            )}
 
             <InputField
               label="Confirm Password"
               type="password"
               placeholder="Confirm your password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+                setError("");
+              }}
             />
 
+            {confirmPassword && (
+              <p
+                className={`mt-2 mb-5 text-sm font-medium ${
+                  password === confirmPassword
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {password === confirmPassword
+                  ? "✅ Passwords Match"
+                  : "❌ Passwords do not match"}
+              </p>
+            )}
+
             <label className="flex items-center gap-2 text-sm my-5">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => {
+                  setAcceptedTerms(e.target.checked);
+                  setError("");
+                }}
+              />
               I agree to the Terms & Conditions
             </label>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-xl font-semibold">
-              Create Account
+            {error && (
+              <div className="mb-4 rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-700">
+                ⚠ {error}
+              </div>
+            )}
+
+            <button
+              onClick={handleRegister}
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 transition text-white py-3 rounded-xl font-semibold"
+            >
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
 
             <p className="text-center mt-6 text-gray-600">

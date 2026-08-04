@@ -6,7 +6,26 @@ import PublicNavbar from "../components/PublicNavbar";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const handleLogin = () => {
+    if (!username.trim()) {
+      setError("Please enter your email or username.");
+      return;
+    }
 
+    if (!password.trim()) {
+      setError("Please enter your password.");
+      return;
+    }
+
+    setError("");
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+};
   return (
     <>
       <PublicNavbar />
@@ -73,9 +92,16 @@ function Login() {
                 Forgot Password?
               </button>
             </div>
-
-            <button className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-xl font-semibold">
-              Login
+            {error && (
+                <div className="mb-4 rounded-lg bg-red-100 border border-red-300 text-red-700 px-4 py-3">
+                  ⚠ {error}
+                </div>
+              )}
+           <button
+              onClick={handleLogin}
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 transition text-white py-3 rounded-xl font-semibold">
+              {loading ? "Logging in..." : "Login"}
             </button>
 
             <p className="text-center mt-6 text-gray-600">

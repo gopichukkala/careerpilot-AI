@@ -57,55 +57,84 @@ function Register() {
 
   const strength = getPasswordStrength(password);
 
-  const handleRegister = () => {
-    if (!fullName.trim()) {
-      setError("Please enter your full name.");
-      return;
+ const handleRegister = async () => {
+  if (!fullName.trim()) {
+    setError("Please enter your full name.");
+    return;
+  }
+
+  if (!username.trim()) {
+    setError("Please enter a username.");
+    return;
+  }
+
+  if (!email.trim()) {
+    setError("Please enter your email.");
+    return;
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    setError("Please enter a valid email address.");
+    return;
+  }
+
+  if (!password) {
+    setError("Please create a password.");
+    return;
+  }
+
+  if (!confirmPassword) {
+    setError("Please confirm your password.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setError("Passwords do not match.");
+    return;
+  }
+
+  if (!acceptedTerms) {
+    setError("Please accept the Terms & Conditions.");
+    return;
+  }
+
+  setError("");
+  setLoading(true);
+
+  try {
+    const response = await fetch("http://127.0.0.1:5000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fullName,
+        username,
+        email,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.message);
+    } else {
+      alert(data.message);
+
+      setFullName("");
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setAcceptedTerms(false);
     }
+  } catch (error) {
+    setError("Server Error. Please try again.");
+  }
 
-    if (!username.trim()) {
-      setError("Please enter a username.");
-      return;
-    }
-
-    if (!email.trim()) {
-      setError("Please enter your email.");
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-
-    if (!password) {
-      setError("Please create a password.");
-      return;
-    }
-
-    if (!confirmPassword) {
-      setError("Please confirm your password.");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    if (!acceptedTerms) {
-      setError("Please accept the Terms & Conditions.");
-      return;
-    }
-
-    setError("");
-    setLoading(true);
-
-    setTimeout(() => {
-      setLoading(false);
-      alert("🎉 Account Created Successfully!");
-    }, 1500);
-  };
+  setLoading(false);
+};
 
   return (
     <>
